@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">{% endblock %}
+    </head>
+    <body>
+        {% block header %}
+        Je suis le block HEADER.
+        {% endblock %}
+        {% block body %}
+        Je suis le block BODY de base.html.twig
+        {% endblock %}
+        {% block footer %}
+        Je suis le block FOOTER.
+        {% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

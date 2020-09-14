@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+{% block body %}
+{% set variable = 'Je suis la variable définie en twig' %}
+<br>
+{{ variable }}
+<br>
+{% set tableau = ['Moussa', 'AFPA', 'Sylvie'] %}
+{% for nom in tableau %}
+{{nom}}<br>
+{% endfor %}
+<br>
+{# comment #}
+{% endblock %}
