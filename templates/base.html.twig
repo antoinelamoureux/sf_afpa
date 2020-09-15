@@ -8,6 +8,18 @@
     <body>
         {% block header %}
         {% endblock %}
+        {% block message %}
+        {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger">
+        {{ message }}
+        </div>
+        {% endfor %}
+        {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+        {{ message }}
+        </div>
+        {% endfor %}
+        {% endblock %}
         <div class="container">
         {% block body %}
         Je suis le block BODY de base.html.twig
