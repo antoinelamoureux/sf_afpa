@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Commentaire;
+use App\Form\CommentaireType;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
@@ -55,12 +57,30 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="post_show", methods={"GET"})
+     * @Route("/{id}", name="post_show", methods={"GET", "POST"})
      */
-    public function show(Post $post): Response
+    public function show(Post $post, Request $request): Response
     {
+        $commentaire = new Commentaire();
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->handleRequest($request);
+        $entityManager = $this->getDoctrine()->getManager();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $commentaire->setUser($this->getUser());
+            $commentaire->setPost($post);
+            $entityManager->persist($commentaire);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('post_show', ['id'=>$post->getId()]);
+        }
+
+        $liste_commentaires = $entityManager->getRepository('App:Commentaire')->findByPost($post);
+
         return $this->render('post/show.html.twig', [
             'post' => $post,
+            'form' => $form->createView(),
+            'liste_commentaires' => $liste_commentaires
         ]);
     }
 

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\HttpFoundation\File\File;
@@ -64,9 +66,15 @@ class Post
      */
     private $updatedAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Commentaire::class, mappedBy="post")
+     */
+    private $commentaires;
+
     public function __construct()
     {
         $this->createdAt = new \Datetime();
+        $this->commentaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -162,6 +170,42 @@ class Post
     public function getImageFile()
     {
         return $this->imageFile;
+    }
+
+    /**
+     * @return Collection|Commentaire[]
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): self
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->contains($commentaire)) {
+            $this->commentaires->removeElement($commentaire);
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getPost() === $this) {
+                $commentaire->setPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->titre;
     }
 
 }

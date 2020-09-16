@@ -39,4 +39,22 @@
     <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
 
     {{ include('post/_delete_form.html.twig') }}
+
+    <div>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+    </div>
+
+     <div class="container">
+    {% for comment in liste_commentaires %}
+    <br>
+
+    <i>Posté par: {{ comment.user }} </i><br>
+     {{ comment.contenu }}<hr>
+    {% endfor %}
+    </div>
+
+{{ form_end(form) }}
+
 {% endblock %}
