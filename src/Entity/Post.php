@@ -5,7 +5,12 @@ namespace App\Entity;
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 /**
+ * @ORM\Entity
+ * @Vich\Uploadable
  * @ORM\Entity(repositoryClass=PostRepository::class)
  */
 class Post
@@ -40,17 +45,29 @@ class Post
     /**
      * @ORM\Column(type="text")
      */
-    private $auteur;
-
-    /**
-     * @ORM\Column(type="text")
-     */
     private $image;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
      */
     private $user;
+
+    /**
+     * @Vich\UploadableField(mapping="post_images", fileNameProperty="image")
+     * @var File
+     */
+    private $imageFile;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @var \DateTime
+     */
+    private $updatedAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \Datetime();
+    }
 
     public function getId(): ?int
     {
@@ -105,18 +122,6 @@ class Post
         return $this;
     }
 
-    public function getAuteur(): ?string
-    {
-        return $this->auteur;
-    }
-
-    public function setAuteur(string $auteur): self
-    {
-        $this->auteur = $auteur;
-
-        return $this;
-    }
-
     public function getImage(): ?string
     {
         return $this->image;
@@ -140,4 +145,23 @@ class Post
 
         return $this;
     }
+
+    public function setImageFile(File $image = null)
+    {
+        $this->imageFile = $image;
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($image) {
+            // if 'updatedAt' is not defined in your entity, use another property
+            $this->updatedAt = new \DateTime('now');
+        }
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
 }

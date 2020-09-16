@@ -1,0 +1,14 @@
+.deconnection {
+    color: white;
+    font-weight: bold;
+}
+
+.deconnection:hover {
+    color: white;
+    font-weight: bold;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: white;
+    font-weight: bold;
+}
